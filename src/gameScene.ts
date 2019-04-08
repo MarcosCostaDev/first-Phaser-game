@@ -1,4 +1,6 @@
 import 'phaser';
+import { CONST } from "./const/const";
+
 
 export class GameScene extends Phaser.Scene {
     platforms: Phaser.Physics.Arcade.StaticGroup;
@@ -8,12 +10,13 @@ export class GameScene extends Phaser.Scene {
     score = 0;
     scoreText;
     bombs;
-    gameOver: boolean = false;
 
     constructor() {
         super({
             key: "GameScene"
         });
+
+        CONST.GAMEOVER = false;
     }
 
     init(params): void {
@@ -28,9 +31,6 @@ export class GameScene extends Phaser.Scene {
             'dist/assets/dude.png',
             { frameWidth: 32, frameHeight: 48 }
         );
-
-
-
     }
 
     create(): void {
@@ -110,7 +110,11 @@ export class GameScene extends Phaser.Scene {
     }
 
     update(time: number): void {
-        if (this.gameOver) {
+        if (CONST.GAMEOVER) {
+            CONST.SCORE = this.score;
+            this.score = 0;        
+            this.scene.start("MainMenuScene");
+            CONST.GAMEOVER = false;
             return;
         }
 
@@ -166,7 +170,7 @@ export class GameScene extends Phaser.Scene {
 
         player.anims.play('turn');
 
-        this.gameOver = true;
+        CONST.GAMEOVER = true;
     }
 
 }
